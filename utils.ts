@@ -41,14 +41,20 @@ export const getFirebaseAuth = (): FirebaseAuth => {
  */
 export const register = async (email: string, password: string) => {
   const auth = getFirebaseAuth();
-  const router = useRouter();
+
   await createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      router.push("/dashboard");
+    .then(async (response) => {
+      const idToken = await response.user.getIdToken();
+      const refreshToken = response.user.refreshToken;
+      await fetch("/api/session", {
+        method: "POST",
+        body: JSON.stringify({ idToken, refreshToken }),
+      });
     })
     .catch((e) => {
       alert(e.message);
     });
+  //  const update
 };
 /**
  * @description メールアドレスとパスワードでログイン
@@ -56,17 +62,16 @@ export const register = async (email: string, password: string) => {
 export const login = async (email: string, password: string) => {
   // FirebaseAuthを取得する
   const auth = getFirebaseAuth();
-  // メールアドレスとパスワードでログインする
-  const result = await signInWithEmailAndPassword(auth, email, password);
-  // セッションIDを作成するためのIDを作成する
-  const id = await result.user.getIdToken();
-  // Cookieにセッションを付与するようにAPIを投げる
-  console.log("aaaa");
-  await fetch("/api/session", {
-    method: "POST",
-    body: JSON.stringify({ id }),
-  });
-  console.log("bbbbb");
+  await signInWithEmailAndPassword(auth, email, password).then(
+    async (response) => {
+      const idToken = await response.user.getIdToken();
+      const refreshToken = response.user.refreshToken;
+      await fetch("/api/session", {
+        method: "POST",
+        body: JSON.stringify({ idToken, refreshToken }),
+      });
+    }
+  );
 };
 
 /**

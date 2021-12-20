@@ -8,7 +8,6 @@ import { firebaseAdmin } from "../firebaseAdmin"; // この後に実装するフ
 
 const DashboardPage: NextPage<{ email: string }> = ({ email }) => {
   const router = useRouter();
-
   const onLogout = async () => {
     await logout(); // ログアウトさせる
     router.push("/Login"); // ログインページへ遷移させる
@@ -29,11 +28,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const session = cookies.session || "";
   //   セッションIDを検証して、認証情報を取得する
+  console.log("c");
   const user = await firebaseAdmin
     .auth()
     .verifySessionCookie(session, true)
     .catch(() => null);
   console.log(user);
+  console.log("d");
   //   認証情報が無い場合は、ログイン画面へ遷移させる
   if (!user) {
     return {
