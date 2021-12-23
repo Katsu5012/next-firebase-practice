@@ -7,12 +7,11 @@ import { register } from "../utils";
 const Register: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+  //   const router = useRouter();
   const onSubmit = async (event: FormEvent) => {
-    event.preventDefault;
+    event.preventDefault();
     await register(email, password).then((response) => {
-      console.log(response);
-      router.push("/dashboard");
+      //   router.push("/dashboard");
     });
   };
   return (

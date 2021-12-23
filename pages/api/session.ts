@@ -19,9 +19,6 @@ export default async function sessionApi(req: Req, res: Res) {
   const sessionCookie = await auth.createSessionCookie(idToken, {
     expiresIn: idTokenExpiresIn,
   });
-  const refreshTokenCookie = await auth.createSessionCookie(refreshToken, {
-    expiresIn: refreshTokenExpiresIn,
-  });
 
   // Cookieのオプション
   const options = {
@@ -30,17 +27,16 @@ export default async function sessionApi(req: Req, res: Res) {
     secure: true,
     path: "/",
   };
-  console.log("a");
 
   const refreshTokenOptions = {
     maxAge: refreshTokenExpiresIn,
-    httpOnly: true,
+    httpOnly: false,
     secure: true,
     path: "/",
   };
   // セッションIDをCookieに設定する
-  setCookie({ res }, "session", sessionCookie, options);
+  setCookie({ res }, "idToken", sessionCookie, options);
   setCookie({ res }, "refreshToken", refreshToken, refreshTokenOptions);
-  console.log("b");
+
   res.send(JSON.stringify({ status: "success" }));
 }
