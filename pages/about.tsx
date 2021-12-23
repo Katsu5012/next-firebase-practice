@@ -1,4 +1,5 @@
 function Welcome(props: { name: string }) {
+  console.log(props.name);
   return <h1>Hello, {props.name}</h1>;
 }
 

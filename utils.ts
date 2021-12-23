@@ -1,6 +1,5 @@
 import type { FirebaseApp } from "firebase/app";
 import type { Auth as FirebaseAuth } from "firebase/auth";
-import { useRouter } from "next/router";
 import { getApps, initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -36,6 +35,7 @@ export const getFirebaseApp = (): FirebaseApp | undefined => {
 export const getFirebaseAuth = (): FirebaseAuth => {
   return getAuth(getFirebaseApp());
 };
+
 /**
  * @description メールアドレスとパスワードで初回登録
  */
@@ -48,7 +48,7 @@ export const register = async (email: string, password: string) => {
       const refreshToken = response.user.refreshToken;
       await fetch("/api/session", {
         method: "POST",
-        body: JSON.stringify({ idToken, refreshToken }),
+        body: JSON.stringify({ idToken: idToken, refreshToken: refreshToken }),
       });
     })
     .catch((e) => {
@@ -56,6 +56,7 @@ export const register = async (email: string, password: string) => {
     });
   //  const update
 };
+
 /**
  * @description メールアドレスとパスワードでログイン
  */
@@ -65,10 +66,12 @@ export const login = async (email: string, password: string) => {
   await signInWithEmailAndPassword(auth, email, password).then(
     async (response) => {
       const idToken = await response.user.getIdToken();
+
       const refreshToken = response.user.refreshToken;
+
       await fetch("/api/session", {
         method: "POST",
-        body: JSON.stringify({ idToken, refreshToken }),
+        body: JSON.stringify({ idToken: idToken, refreshToken: refreshToken }),
       });
     }
   );

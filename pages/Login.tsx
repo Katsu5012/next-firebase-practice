@@ -10,7 +10,7 @@ const LoginPage: NextPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log(process.env.FIREBASE_ADMIN_CLIENT_EMAIL);
+
   const onSubmit = async (event: FormEvent) => {
     // デフォルトの<form />の挙動を無効にする
     event.preventDefault();
